@@ -1,27 +1,35 @@
 #################################################################################
 #      Installation des logiciels de base Version 2                             #
 #             Octobre 2021                                                      #
-#            Nathalie FERRER                                                    ##!/usr/bin/env python3
+#            Nathalie FERRER                                                    #
+#          #!/usr/bin/env python3                                               #
 #################################################################################
 #importation du module "os" => interagit avec système d'exploitation
 import os
+#manipulation courante des chemins
 import os.path                                                                                              
 import webbrowser
+#utilisation du protocole http
 import requests
+#module qui fournit des outils pour créer, écrire, ajouter des données et lister un fichier ZIP.
 import zipfile
+#Ce module crée des fichiers et répertoires temporaires.
 import tempfile
+#pour les opérations sur les fichiers
 import shutil
 
 
 #Définition de la variable url => adresse aws qui contient le zip (ouvert à tous)
 url = 'https://installation-logiciel.s3.eu-west-3.amazonaws.com/2.Win_install.zip'
+#chemin cible
 target_path = 'logiciels.zip'
 
+#construction de l'objet requests qui va être envoyé au serveur pour récupérer les ressources (url)
 response = requests.get(url, stream=True)
-#Manipulation du fichier zip (extraction, ...)
+#Manipulation du fichier zip (extraction du fichier logiciels.zip)
 handle = open(target_path, "wb")
 for chunk in response.iter_content(chunk_size=512):
-    # filter out keep-alive new chunks
+    # filtre les morceaux
     if chunk:  
         handle.write(chunk)
 handle.close()
@@ -29,16 +37,19 @@ handle.close()
 with zipfile.ZipFile("logiciels.zip","r") as zip_ref:
     zip_ref.extractall("targetdir")
 
-
-def test_openoffice():                                                                                  #definition de fonction
-    os.chdir(r"C:\Program Files (x86)")                                                                #méthode utilisé pour changer le répertoire de travail actuel
-    if(os.path.exists(liste1[0])):                                                               #test à l'aide du module "os" et des méthodes "path" et "exists" si dans la liste1, à l'argument "0", le fichier existe
-        print("***************************OPENOFFICE EXISTE DÉJA*********************************")     #affiche la chaine de caractere entre les parentheses
+#definition des fonctions de test (logiciels présents ou pas - installation ou pas)
+def test_openoffice():
+    #méthode utilisée pour changer le répertoire de travail actuel                                                                                 
+    os.chdir(r"C:\Program Files (x86)")
+    #test à l'aide du module "os.path" et "exists" si dans la liste1, à l'argument "0", openoffice existe                                                                
+    if(os.path.exists(liste1[0])):                                                               
+        print("***************************OPENOFFICE EXISTE DÉJA*********************************")     
     else:
         print("*************************INSTALLATION OPENOFFICE EN COURS*************************")
         os.chdir(r"C:\Users\Nathalie\Downloads\targetdir\2.Win_install")
-        os.system("Apache_OpenOffice_4.1.8_Win_x86_install_fr.exe /S")                                                         #méthode utilisé pour interagir avec le systeme d'exploitation
+        #méthode utilisé pour interagir avec le systeme d'exploitation
         print("#############################OPENOFFICE INSTALLÉ##################################")
+        os.system("Apache_OpenOffice_4.1.8_Win_x86_install_fr.exe /S")                                                         
 
 def test_chrome():
     os.chdir(r"C:\Program Files (x86)")
@@ -208,7 +219,7 @@ liste1 = ["OpenOffice 4","Filezilla","Taskcoach","Thunderbird","Vscode","Xampp",
 "Vlc","Java","Teams","PdfCreator","Totalav"]                       
 
 
-#Appel de la fonction défini plus haut
+#Appel de la fonction définie plus haut
 test_openoffice()
 test_chrome() 
 test_filezilla()
